@@ -1,12 +1,11 @@
 package com.example.nail_salon_booking_backend.model;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "services")
-public class Service {
+public class NailService {  // Renamed from Service to NailService
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -14,7 +13,12 @@ public class Service {
     private String description;
     private BigDecimal price;
 
-    public Service(long id, String name, String description, BigDecimal price) {
+    // No-args constructor
+    public NailService() {
+    }
+
+    // All-args constructor
+    public NailService(long id, String name, String description, BigDecimal price) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -53,3 +57,5 @@ public class Service {
         this.price = price;
     }
 }
+
+

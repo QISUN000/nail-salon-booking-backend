@@ -1,4 +1,5 @@
 package com.example.nail_salon_booking_backend.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -8,28 +9,26 @@ import java.math.BigDecimal;
 public class NailService {  // Renamed from Service to NailService
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
     private String description;
-    private BigDecimal price;
+    private Double price;
+    private String duration;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     // No-args constructor
     public NailService() {
     }
 
-    // All-args constructor
-    public NailService(long id, String name, String description, BigDecimal price) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,12 +48,28 @@ public class NailService {  // Renamed from Service to NailService
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
 

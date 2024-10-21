@@ -9,25 +9,25 @@ public class Professional {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
+    @Column(nullable = false)
     private String name;
-    private String role;
+
     private String imageUrl;
-    private Double price;
+
     private String instagramHandle;
 
-    // Constructors, getters, and setters
+    private Double price;
 
-    public Professional() {}
+    private String role;
 
-    public Professional(String name, String role, String imageUrl, Double price, String instagramHandle) {
-        this.name = name;
-        this.role = role;
-        this.imageUrl = imageUrl;
-        this.price = price;
-        this.instagramHandle = instagramHandle;
-    }
+    @Column(nullable = false)
+    private boolean available = true;
 
-    // Getters and setters for all fields
+    // Getters and setters
 
     public Long getId() {
         return id;
@@ -35,6 +35,14 @@ public class Professional {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getName() {
@@ -45,20 +53,20 @@ public class Professional {
         this.name = name;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getInstagramHandle() {
+        return instagramHandle;
+    }
+
+    public void setInstagramHandle(String instagramHandle) {
+        this.instagramHandle = instagramHandle;
     }
 
     public Double getPrice() {
@@ -69,11 +77,19 @@ public class Professional {
         this.price = price;
     }
 
-    public String getInstagramHandle() {
-        return instagramHandle;
+    public String getRole() {
+        return role;
     }
 
-    public void setInstagramHandle(String instagramHandle) {
-        this.instagramHandle = instagramHandle;
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

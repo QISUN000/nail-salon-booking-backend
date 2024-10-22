@@ -71,6 +71,8 @@ public class NailService {  // Renamed from Service to NailService
     public void setCategory(Category category) {
         this.category = category;
     }
+
+
 }
 
 

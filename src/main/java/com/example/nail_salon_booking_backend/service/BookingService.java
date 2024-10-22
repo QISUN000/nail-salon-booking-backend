@@ -1,6 +1,7 @@
 package com.example.nail_salon_booking_backend.service;
 
 import com.example.nail_salon_booking_backend.model.Booking;
+import com.example.nail_salon_booking_backend.model.NailService;
 import com.example.nail_salon_booking_backend.model.Professional;
 import com.example.nail_salon_booking_backend.model.User;
 import com.example.nail_salon_booking_backend.repository.BookingRepository;
@@ -31,10 +32,12 @@ public class BookingService {
             throw new AccessDeniedException("You can only create bookings for yourself");
         }
 
-        if (!isProfessionalAvailable(booking.getProfessional(), booking.getStartTime(), booking.getEndTime())) {
+        LocalDateTime endTime = calculateEndTime(booking);
+        if (!isProfessionalAvailable(booking.getProfessional(), booking.getStartTime(), endTime)) {
             throw new IllegalStateException("Professional is not available for the selected time slot");
         }
 
+        booking.setEndTime(endTime);
         booking.setStatus(Booking.BookingStatus.SCHEDULED);
         Booking savedBooking = bookingRepository.save(booking);
 
@@ -42,6 +45,20 @@ public class BookingService {
         return savedBooking;
     }
 
+    private LocalDateTime calculateEndTime(Booking booking) {
+        LocalDateTime endTime = booking.getStartTime();
+        for (NailService service : booking.getServices()) {
+            try {
+                // Assuming getDuration() returns the duration in minutes
+                long durationMinutes = Long.parseLong(service.getDuration());
+                endTime = endTime.plusMinutes(durationMinutes);
+            } catch (NumberFormatException e) {
+                // Log the error and skip this service if duration is not a valid number
+                System.err.println("Invalid duration for service: " + service.getId());
+            }
+        }
+        return endTime;
+    }
     public Optional<Booking> getBookingById(Long id, User currentUser) {
         Optional<Booking> booking = bookingRepository.findById(id);
         if (booking.isPresent() && !isAuthorizedToView(booking.get(), currentUser)) {
@@ -72,9 +89,9 @@ public class BookingService {
                         throw new AccessDeniedException("You are not authorized to modify this booking");
                     }
                     booking.setStartTime(updatedBooking.getStartTime());
-                    booking.setEndTime(updatedBooking.getEndTime());
-                    booking.setService(updatedBooking.getService());
+                    booking.setServices(updatedBooking.getServices());
                     booking.setProfessional(updatedBooking.getProfessional());
+                    booking.setEndTime(calculateEndTime(booking));
                     Booking savedBooking = bookingRepository.save(booking);
                     notificationService.sendBookingUpdateNotification(savedBooking);
                     return savedBooking;

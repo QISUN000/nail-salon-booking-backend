@@ -47,11 +47,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
                         .requestMatchers("/api/customer/**").hasAnyRole("ADMIN", "CUSTOMER")
-//                        .anyRequest().authenticated()
-                                .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 );
 
-//        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

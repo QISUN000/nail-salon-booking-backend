@@ -2,6 +2,8 @@ package com.example.nail_salon_booking_backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "bookings")
@@ -18,9 +20,13 @@ public class Booking {
     @JoinColumn(name = "professional_id", nullable = false)
     private Professional professional;
 
-    @ManyToOne
-    @JoinColumn(name = "service_id", nullable = false)
-    private NailService service;
+    @ManyToMany
+    @JoinTable(
+            name = "booking_services",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id")
+    )
+    private Set<NailService> services = new HashSet<>();
 
     @Column(nullable = false)
     private LocalDateTime startTime;
@@ -35,6 +41,8 @@ public class Booking {
     public enum BookingStatus {
         SCHEDULED, COMPLETED, CANCELLED
     }
+
+    // Getters and setters
 
     public Long getId() {
         return id;
@@ -60,12 +68,12 @@ public class Booking {
         this.professional = professional;
     }
 
-    public NailService getService() {
-        return service;
+    public Set<NailService> getServices() {
+        return services;
     }
 
-    public void setService(NailService service) {
-        this.service = service;
+    public void setServices(Set<NailService> services) {
+        this.services = services;
     }
 
     public LocalDateTime getStartTime() {
@@ -91,7 +99,4 @@ public class Booking {
     public void setStatus(BookingStatus status) {
         this.status = status;
     }
-
-    // Getters and setters
-    // ... (implement getters and setters for all fields)
 }

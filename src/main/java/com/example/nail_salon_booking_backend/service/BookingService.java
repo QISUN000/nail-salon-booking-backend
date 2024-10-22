@@ -59,6 +59,8 @@ public class BookingService {
         }
         return endTime;
     }
+
+
     public Optional<Booking> getBookingById(Long id, User currentUser) {
         Optional<Booking> booking = bookingRepository.findById(id);
         if (booking.isPresent() && !isAuthorizedToView(booking.get(), currentUser)) {

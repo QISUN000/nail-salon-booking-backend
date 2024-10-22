@@ -8,6 +8,7 @@ import com.example.nail_salon_booking_backend.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +36,17 @@ public class BookingController {
     })
     public ResponseEntity<?> createBooking(@RequestBody BookingRequest bookingRequest, @AuthenticationPrincipal User user) {
         try {
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(new ApiResponse(false, "User not authenticated"));
+            }
+
             Booking booking = new Booking();
-            booking.setCustomer(user);
+            booking.setCustomer(user);  // Set the authenticated user
             booking.setProfessional(bookingRequest.getProfessional());
             booking.setServices(bookingRequest.getServices());
             booking.setStartTime(bookingRequest.getStartTime());
+            booking.setStatus(Booking.BookingStatus.SCHEDULED);  // Set initial status
 
             Booking createdBooking = bookingService.createBooking(booking, user);
             return ResponseEntity.created(URI.create("/api/bookings/" + createdBooking.getId()))

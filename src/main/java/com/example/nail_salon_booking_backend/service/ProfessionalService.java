@@ -33,7 +33,7 @@ public class ProfessionalService {
                     professional.setInstagramHandle(updatedProfessional.getInstagramHandle());
                     professional.setPrice(updatedProfessional.getPrice());
                     professional.setRole(updatedProfessional.getRole());
-                    professional.setAvailable(updatedProfessional.isAvailable());
+//                    professional.setAvailable(updatedProfessional.isAvailable());
                     return professionalRepository.save(professional);
                 });
     }
@@ -55,14 +55,14 @@ public class ProfessionalService {
         return professionalRepository.findByPriceLessThanEqual(maxPrice);
     }
 
-    public List<Professional> getAvailableProfessionals() {
-        return professionalRepository.findByAvailableTrue();
-    }
+//    public List<Professional> getAvailableProfessionals() {
+//        return professionalRepository.findByAvailableTrue();
+//    }
 
-    public void toggleProfessionalAvailability(Long id, boolean available) {
-        professionalRepository.findById(id).ifPresent(professional -> {
-            professional.setAvailable(available);
-            professionalRepository.save(professional);
-        });
-    }
+//    public void toggleProfessionalAvailability(Long id, boolean available) {
+//        professionalRepository.findById(id).ifPresent(professional -> {
+//            professional.setAvailable(available);
+//            professionalRepository.save(professional);
+//        });
+//    }
 }

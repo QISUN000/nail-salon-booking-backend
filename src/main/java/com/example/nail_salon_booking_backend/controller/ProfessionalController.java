@@ -65,14 +65,14 @@ public class ProfessionalController {
         }
     }
 
-    @GetMapping("/available")
-    public ResponseEntity<List<Professional>> getAvailableProfessionals() {
-        return ResponseEntity.ok(professionalService.getAvailableProfessionals());
-    }
-
-    @PatchMapping("/{id}/availability")
-    public ResponseEntity<Void> toggleProfessionalAvailability(@PathVariable Long id, @RequestParam boolean available) {
-        professionalService.toggleProfessionalAvailability(id, available);
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/available")
+//    public ResponseEntity<List<Professional>> getAvailableProfessionals() {
+//        return ResponseEntity.ok(professionalService.getAvailableProfessionals());
+//    }
+//
+//    @PatchMapping("/{id}/availability")
+//    public ResponseEntity<Void> toggleProfessionalAvailability(@PathVariable Long id, @RequestParam boolean available) {
+//        professionalService.toggleProfessionalAvailability(id, available);
+//        return ResponseEntity.ok().build();
+//    }
 }

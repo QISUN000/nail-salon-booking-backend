@@ -2,6 +2,7 @@ package com.example.nail_salon_booking_backend.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,13 +42,9 @@ public class SecurityConfig {
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/public/**", "/v3/api-docs/**",
-                                "/swagger-ui/**", "/swagger-ui.html", "/api/categories",
-                                "/api/professionals", "/images/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/employee/**").hasAnyRole("ADMIN", "EMPLOYEE")
-                        .requestMatchers("/api/customer/**").hasAnyRole("ADMIN", "CUSTOMER")
-                        .anyRequest().authenticated()
+                        // Allow all requests to these endpoints
+                        .requestMatchers("/**").permitAll()
+                        .anyRequest().permitAll()
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

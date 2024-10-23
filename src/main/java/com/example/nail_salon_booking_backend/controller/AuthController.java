@@ -43,18 +43,39 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
-        if (userService.emailExists(request.getEmail())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Email is already taken!"),
-                    HttpStatus.BAD_REQUEST);
+        try {
+            // Log incoming request
+            System.out.println("Received registration request for email: " + request.getEmail());
+
+            // Validate request
+            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Email is required"));
+            }
+            if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Password is required"));
+            }
+            if (request.getName() == null || request.getName().trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Name is required"));
+            }
+
+            if (userService.emailExists(request.getEmail())) {
+                System.out.println("Registration failed: Email already exists - " + request.getEmail());
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse(false, "Email is already taken!"));
+            }
+
+            User user = userService.registerUser(request);
+            System.out.println("User registered successfully: " + user.getEmail());
+
+            return ResponseEntity.ok(new ApiResponse(true, "User registered successfully"));
+        } catch (Exception e) {
+            System.err.println("Registration error: " + e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, e.getMessage()));
         }
-
-        User user = userService.registerUser(request);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/api/users/{email}")
-                .buildAndExpand(user.getEmail()).toUri();
-
-        return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "User registered successfully"));
     }
 
     @PostMapping("/login")

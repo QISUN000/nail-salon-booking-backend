@@ -10,5 +10,6 @@ public interface ProfessionalRepository extends JpaRepository<Professional, Long
     Optional<Professional> findByUser(User user);
     List<Professional> findByNameContainingIgnoreCase(String name);
     List<Professional> findByPriceLessThanEqual(Double maxPrice);
+    Optional<Professional> findByUserId(Long userId);
 //    List<Professional> findByAvailableTrue();
 }

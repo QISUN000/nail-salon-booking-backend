@@ -5,13 +5,21 @@ import com.example.nail_salon_booking_backend.model.NailService;
 import com.example.nail_salon_booking_backend.model.Professional;
 import com.example.nail_salon_booking_backend.model.User;
 import com.example.nail_salon_booking_backend.repository.BookingRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import java.util.HashSet;
 import java.util.List;
+import java.sql.Date;
 import java.util.Optional;
+
 
 @Service
 public class BookingService {
@@ -26,12 +34,28 @@ public class BookingService {
         this.notificationService = notificationService;
     }
 
+    public List<Booking> getAllBookings(String date) {
+        if (date == null || date.isEmpty()) {
+            return bookingRepository.findAll();
+        }
+
+        return bookingRepository.findAll((Root<Booking> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            LocalDate searchDate = LocalDate.parse(date);
+            return cb.equal(
+                    cb.function("DATE", Date.class, root.get("startTime")),
+                    Date.valueOf(searchDate)
+            );
+        });
+    }
+
+
     @Transactional
     public Booking createBooking(Booking booking, User currentUser) {
         if (!booking.getCustomer().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("You can only create bookings for yourself");
         }
 
+        // Calculate end time
         LocalDateTime endTime = calculateEndTime(booking);
         if (!isProfessionalAvailable(booking.getProfessional(), booking.getStartTime(), endTime)) {
             throw new IllegalStateException("Professional is not available for the selected time slot");
@@ -39,7 +63,15 @@ public class BookingService {
 
         booking.setEndTime(endTime);
         booking.setStatus(Booking.BookingStatus.SCHEDULED);
+
+        // Save the booking first
         Booking savedBooking = bookingRepository.save(booking);
+
+        // Explicitly save the booking_services relationships
+        if (booking.getServices() != null && !booking.getServices().isEmpty()) {
+            savedBooking.setServices(new HashSet<>(booking.getServices()));
+            savedBooking = bookingRepository.save(savedBooking);
+        }
 
         notificationService.sendBookingConfirmation(savedBooking);
         return savedBooking;
@@ -129,5 +161,10 @@ public class BookingService {
     private boolean isAuthorizedToModify(Booking booking, User user) {
         return booking.getCustomer().getId().equals(user.getId()) ||
                 user.getRole().equals(User.UserRole.ADMIN);
+    }
+
+    public List<Booking> getBookingsForProfessional(Long professionalId) {
+        Professional professional = professionalService.getProfessionalById(professionalId);
+        return bookingRepository.findByProfessional(professional);
     }
 }

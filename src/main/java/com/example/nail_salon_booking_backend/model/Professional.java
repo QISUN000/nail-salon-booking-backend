@@ -25,7 +25,7 @@ public class Professional {
     private String role;
 
 //    @Column(nullable = false)
-//    private boolean available = true;
+    private boolean available = true;
 
     // Getters and setters
 
@@ -85,11 +85,11 @@ public class Professional {
         this.role = role;
     }
 
-//    public boolean isAvailable() {
-//        return available;
-//    }
-//
-//    public void setAvailable(boolean available) {
-//        this.available = available;
-//    }
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 }

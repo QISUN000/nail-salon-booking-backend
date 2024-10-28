@@ -4,9 +4,13 @@ import com.example.nail_salon_booking_backend.model.Professional;
 import com.example.nail_salon_booking_backend.service.ProfessionalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.example.nail_salon_booking_backend.security.UserPrincipal;
 
 import java.net.URI;
+
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/professionals")
@@ -25,9 +29,12 @@ public class ProfessionalController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Professional> getProfessionalById(@PathVariable Long id) {
-        return professionalService.getProfessionalById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            Professional professional = professionalService.getProfessionalById(id);
+            return ResponseEntity.ok(professional);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
@@ -62,6 +69,16 @@ public class ProfessionalController {
             return ResponseEntity.ok(professionalService.getProfessionalsByMaxPrice(maxPrice));
         } else {
             return ResponseEntity.ok(professionalService.getAllProfessionals());
+        }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Professional> getProfessionalByCurrentUser(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            Professional professional = professionalService.getProfessionalByUserId(userPrincipal.getId());
+            return ResponseEntity.ok(professional);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.nail_salon_booking_backend.security;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -42,10 +44,21 @@ public class SecurityConfig {
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Allow all requests to these endpoints
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().permitAll()
+                        // Public authentication endpoints
+                        .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+                        .requestMatchers("/api/bookings/**").authenticated()
+
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/api/professionals/**").permitAll()
+                        .requestMatchers("/api/categories/**").permitAll()
+                                .requestMatchers("/api/test/**").permitAll()
+                        // Protected booking endpoints
+//                        .requestMatchers("/api/**").permitAll()
+                        // Any other request requires authentication
+                        .anyRequest().authenticated()
                 );
+
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

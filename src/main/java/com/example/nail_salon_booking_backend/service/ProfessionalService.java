@@ -17,8 +17,9 @@ public class ProfessionalService {
         return professionalRepository.findAll();
     }
 
-    public Optional<Professional> getProfessionalById(Long id) {
-        return professionalRepository.findById(id);
+    public Professional getProfessionalById(Long id) {
+        return professionalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Professional not found with id: " + id));
     }
 
     public Professional addProfessional(Professional professional) {
@@ -49,6 +50,11 @@ public class ProfessionalService {
 
     public List<Professional> searchProfessionalsByName(String name) {
         return professionalRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    public Professional getProfessionalByUserId(Long userId) {
+        return professionalRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Professional not found for user id: " + userId));
     }
 
     public List<Professional> getProfessionalsByMaxPrice(Double maxPrice) {

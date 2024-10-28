@@ -1,33 +1,28 @@
 package com.example.nail_salon_booking_backend.payload;
 
-import com.example.nail_salon_booking_backend.model.NailService;
-import com.example.nail_salon_booking_backend.model.Professional;
-
 import java.time.LocalDateTime;
 import java.util.Set;
 
 public class BookingRequest {
-    private Professional professional;
-    private Set<NailService> services;
+    private Long professionalId;  // Changed from Professional to Long
+    private Set<Long> serviceIds; // Changed from Set<NailService> to Set<Long>
     private LocalDateTime startTime;
 
     // Getters and setters
-
-
-    public Professional getProfessional() {
-        return professional;
+    public Long getProfessionalId() {
+        return professionalId;
     }
 
-    public void setProfessional(Professional professional) {
-        this.professional = professional;
+    public void setProfessionalId(Long professionalId) {
+        this.professionalId = professionalId;
     }
 
-    public Set<NailService> getServices() {
-        return services;
+    public Set<Long> getServiceIds() {
+        return serviceIds;
     }
 
-    public void setServices(Set<NailService> services) {
-        this.services = services;
+    public void setServiceIds(Set<Long> serviceIds) {
+        this.serviceIds = serviceIds;
     }
 
     public LocalDateTime getStartTime() {

@@ -48,7 +48,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
         try {
-            // Log incoming request
+       
             System.out.println("Received registration request for email: " + request.getEmail());
 
             // Validate request

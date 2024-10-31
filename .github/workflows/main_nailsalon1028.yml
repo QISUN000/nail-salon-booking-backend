@@ -1,6 +1,5 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy WAR app to Azure Web App - Nailsalon1028
 
 on:
@@ -12,24 +11,23 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'microsoft'
-
       - name: Build with Maven
-        run: mvn clean install -DskipTests 
-
+        run: |
+          mvn clean package -DskipTests
+          cd target
+          ren *.war ROOT.war 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          path: '${{ github.workspace }}/target/ROOT.war'
 
   deploy:
     runs-on: windows-latest
@@ -50,5 +48,5 @@ jobs:
         with:
           app-name: 'Nailsalon1028'
           slot-name: 'Production'
-          package: '*.war'
+          package: 'ROOT.war'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_181D7E033F4A48C7AF4CE1868D96E904 }}

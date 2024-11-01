@@ -12,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")  // This allows all paths
                 .allowedOrigins(
                         "http://localhost:5173",
-                        "https://nail-salon-navy.vercel.app"  // Your Vercel domain
+                        "https://nail-salon-navy.vercel.app",
+                        "https://qisun.lol"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")

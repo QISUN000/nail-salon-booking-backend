@@ -48,7 +48,8 @@ public class SecurityConfig {
                 "http://localhost:5173",
                 "https://nail-salon-navy.vercel.app",
                 "https://www.nail-salon-navy.vercel.app",
-                "https://nailsalon-1660653da71e.herokuapp.com"
+                "https://nailsalon-1660653da71e.herokuapp.com",
+                "https://qisun.lol"
         ));
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"

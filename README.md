@@ -5,7 +5,7 @@ Backend service for the Nail Salon Booking System, built with Spring Boot 3.3.4.
 
 ## Live Demo
 🚀 Visit the Live Site 
-https://nail-salon-jqwxrhg2r-qis-projects-779294eb.vercel.app/
+https://nail-salon-navy.vercel.app/
 
 ## Tech Stack
 - **Java Version:** 21

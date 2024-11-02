@@ -3,7 +3,7 @@
 ## Overview
 Backend service for the Nail Salon Booking System, built with Spring Boot 3.3.4. This service provides REST APIs for appointment management, user authentication, and salon service management.
 
-##Live Demo
+## Live Demo
 🚀 Visit the Live Site 
 https://qisun.lol/
 
